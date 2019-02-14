@@ -6,6 +6,8 @@ const ViewUtils = ( function () {
   const ctx = canvas.getContext( '2d' );
   const bgCtx = bgCanvas.getContext( '2d' );
 
+  const toRadians = deg => deg * Math.PI / 180;
+
   const setupCanvases = ( width, height ) => {
     canvas.width = width;
     canvas.height = height;
@@ -48,6 +50,46 @@ const ViewUtils = ( function () {
     getCtx().fill();
   };
 
+  const drawPoint = ( type, planet, addApiPeriData ) => {
+    const { x, y } = planet.orbit.genOrbElems.helioCentricCoords;
+    const lookup = {
+      A: () => 'api',
+      P: () => 'peri',
+    };
+    const fn = lookup[type];
+    if ( fn ) {
+      addApiPeriData( planet.name, fn(), { x, y } );
+    }
+
+    console.log( planet );
+    const scaledApiCoords = calcScaledCoords( planet, x, y, getWidth(), getHeight() );
+    bgCtx.beginPath();
+    bgCtx.fillStyle = planet.color;
+    bgCtx.arc( scaledApiCoords.x, scaledApiCoords.y, 2, 0, 2 * Math.PI );
+    bgCtx.fill();
+    bgCtx.fillText( type, scaledApiCoords.x + 5, scaledApiCoords.y + 3 );
+  };
+
+  const drawOrbit = ( planet ) => {
+    const centerX = ( planet.api.x + planet.peri.x ) / 2;
+    const centerY = ( planet.api.y + planet.peri.y ) / 2;
+    const scaledCenterCoords = calcScaledCoords( planet, centerX, centerY, getWidth(), getHeight() );
+    if ( planet.name !== 'pluto' ) {
+      getBgCtx().beginPath();
+      getBgCtx().strokeStyle = planet.color;
+      getBgCtx().ellipse(
+        scaledCenterCoords.x,
+        scaledCenterCoords.y,
+        planet.orbit.genOrbElems.a * SCALE_DESKTOP / planet.scaleFactor,
+        planet.orbit.genOrbElems.b * SCALE_DESKTOP / planet.scaleFactor,
+        toRadians( planet.orbit.genOrbElems.lPeri ),
+        0,
+        2 * Math.PI,
+      );
+      getBgCtx().stroke();
+    }
+  };
+
   return {
     setupCanvases,
     getWidth,
@@ -55,6 +97,8 @@ const ViewUtils = ( function () {
     getCtx,
     getBgCtx,
     drawPlanet,
+    drawPoint,
+    drawOrbit,
   };
 }() );
 
@@ -65,5 +109,7 @@ module.exports = {
   getCtx: ViewUtils.getCtx,
   getBgCtx: ViewUtils.getBgCtx,
   drawPlanet: ViewUtils.drawPlanet,
+  drawPoint: ViewUtils.drawPoint,
+  drawOrbit: ViewUtils.drawOrbit,
 };
 
