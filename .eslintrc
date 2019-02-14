@@ -1,0 +1,25 @@
+
+{
+    "extends": "airbnb",
+    "globals": { "fetch": false },
+    "rules": {
+      "space-in-parens": ["error", "always"],
+      "react/prefer-stateless-function": [0, { "ignorePureComponents": true }],
+      "import/no-extraneous-dependencies": ["warning", {"devDependencies": false, "optionalDependencies": false, "peerDependencies": false}],
+      "import/extensions": [0],
+      "no-console": [0],
+      "jsx-a11y/anchor-is-valid": [0],
+      "no-underscore-dangle": [0],
+      "func-names":[0],
+      "no-mixed-operators": [
+        "error",
+        {
+            "allowSamePrecedence": true
+        }
+    ]
+    },"env": {
+      "browser": true,
+      "node": true,
+      "jasmine": true
+    }
+  }
