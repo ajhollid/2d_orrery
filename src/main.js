@@ -9,39 +9,65 @@ const app = ( function () {
 
   ViewUtils.setupCanvases( window.innerWidth, window.innerHeight );
 
-  const updateSolarSystem = ( ) => {
-    ViewUtils.getCtx().clearRect( 0, 0, ViewUtils.getWidth(), ViewUtils.getHeight() );
-    const cSinceJ2000 = Kepler.JulianUtils.getCenturiesSinceJ2000( currentDate );
+  const updateSolarSystem = ( shouldDraw, date ) => {
+    const cSinceJ2000 = Kepler.JulianUtils.getCenturiesSinceJ2000( date );
     const planetKeys = Object.keys( SolarSystem );
     for ( let i = 0; i < planetKeys.length; i += 1 ) {
       const planetKey = planetKeys[i];
       const planet = SolarSystem[planetKey];
       const orbitals = Kepler.OrbitalUtils.calcOrbitals( planet, cSinceJ2000 );
       planet.orbit.genOrbElems = orbitals;
-      orbitals.T = currentDate;
+      orbitals.T = date;
       SolarSystem[planetKey] = planet;
       const { x, y } = planet.orbit.genOrbElems.helioCentricCoords;
-      ViewUtils.drawPlanet( planet, x, y );
+      if ( shouldDraw ) { ViewUtils.drawPlanet( planet, x, y ); }
     }
+    return SolarSystem;
+  };
+
+  const incrementSystem = () => {
+    ViewUtils.getCtx().clearRect( 0, 0, ViewUtils.getWidth(), ViewUtils.getHeight() );
+    updateSolarSystem( true, currentDate );
     currentDate += 1;
-    setTimeout( updateSolarSystem, 0 );
+    setTimeout( incrementSystem, 0 );
   };
 
   const startSimulation = () => {
     ViewUtils.getCtx().clearRect( 0, 0, ViewUtils.getWidth(), ViewUtils.getHeight() );
-    updateSolarSystem( currentDate );
+    incrementSystem( currentDate );
   };
 
   const setCurrentDate = ( gregorianDate ) => {
     currentDate = Kepler.JulianUtils.getJulianDate( gregorianDate );
   };
 
+  const addApiPeriData = ( planetKey, key, val ) => {
+    SolarSystem[planetKey][key] = val;
+    console.log( SolarSystem[planetKey] );
+  };
+
+  const drawOrbits = () => {
+    const planetKeys = Object.keys( SolarSystem );
+    for ( let i = 0; i < planetKeys.length; i += 1 ) {
+      const planetKey = planetKeys[i];
+      const planet = SolarSystem[planetKey];
+      const periSystem = updateSolarSystem( false, Kepler.JulianUtils.getJulianDate( planet.periDate ) );
+      ViewUtils.drawPoint( 'P', periSystem[planetKey], addApiPeriData );
+      const apiSystem = updateSolarSystem( false, Kepler.JulianUtils.getJulianDate( planet.apiDate ) );
+      ViewUtils.drawPoint( 'A', apiSystem[planetKey], addApiPeriData );
+      ViewUtils.drawOrbit( planet );
+    }
+  };
+
+
   return {
     startSimulation,
     setCurrentDate,
+    drawOrbits,
   };
 }() );
 
 app.setCurrentDate( '1985/04/30' );
+app.drawOrbits();
 app.startSimulation();
 
