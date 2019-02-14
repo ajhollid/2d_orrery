@@ -90,6 +90,15 @@ const ViewUtils = ( function () {
     }
   };
 
+  const drawPlutoOrbit = ( pluto, plutoPositions ) => {
+    for ( let i = 0; i < plutoPositions.length; i += 1 ) {
+      const position = plutoPositions[i];
+      const scaledCoords = calcScaledCoords( pluto, position.x, position.y, getWidth(), getHeight() );
+      getBgCtx().fillStyle = pluto.color;
+      getBgCtx().fillRect( scaledCoords.x, scaledCoords.y, 1, 1 );
+    }
+  };
+
   return {
     setupCanvases,
     getWidth,
@@ -99,6 +108,7 @@ const ViewUtils = ( function () {
     drawPlanet,
     drawPoint,
     drawOrbit,
+    drawPlutoOrbit,
   };
 }() );
 
@@ -111,5 +121,6 @@ module.exports = {
   drawPlanet: ViewUtils.drawPlanet,
   drawPoint: ViewUtils.drawPoint,
   drawOrbit: ViewUtils.drawOrbit,
+  drawPlutoOrbit: ViewUtils.drawPlutoOrbit,
 };
 
