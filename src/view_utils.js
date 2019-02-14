@@ -1,30 +1,35 @@
 const ViewUtils = ( function () {
   const R_SOL = 10;
-  const SCALE_DESKTOP = 80;
-  const canvas = document.getElementById( 'canvas' );
+  const SCALE_DESKTOP = 70;
+  const canvases = document.getElementsByTagName( 'canvas' );
+  const planetCanvas = document.getElementById( 'canvas' );
+  const dataCanvas = document.getElementById( 'data_canvas' );
   const bgCanvas = document.getElementById( 'bg_canvas' );
-  const ctx = canvas.getContext( '2d' );
+  const ctx = planetCanvas.getContext( '2d' );
   const bgCtx = bgCanvas.getContext( '2d' );
+  const dataCtx = dataCanvas.getContext( '2d' );
 
   const toRadians = deg => deg * Math.PI / 180;
-
-  const setupCanvases = ( width, height ) => {
-    canvas.width = width;
-    canvas.height = height;
-    bgCanvas.width = width;
-    bgCanvas.height = height;
-    // Draw background
-    bgCtx.fillRect( 0, 0, width, height );
-    // Draw sun
-    bgCtx.arc( width / 2, height / 2, R_SOL, 0, 2 * Math.PI );
-    bgCtx.fillStyle = 'yellow';
-    bgCtx.fill();
-  };
-
-  const getWidth = () => canvas.width;
-  const getHeight = () => canvas.height;
+  const getWidth = () => planetCanvas.width;
+  const getHeight = () => planetCanvas.height;
   const getCtx = () => ctx;
   const getBgCtx = () => bgCtx;
+  const getDataCtx = () => dataCtx;
+
+  const setupCanvases = ( width, height ) => {
+    for ( let i = 0; i < canvases.length; i += 1 ) {
+      const canvas = canvases[i];
+      canvas.width = width;
+      canvas.height = height;
+    }
+    // Draw background
+    getBgCtx().fillRect( 0, 0, width, height );
+    // Draw sun
+    getBgCtx().arc( width / 2, height / 2, R_SOL, 0, 2 * Math.PI );
+    getBgCtx().fillStyle = 'yellow';
+    getBgCtx().fill();
+  };
+
 
   const calcScaledCoords = ( planet, x, y ) => {
     const planetaryScaleFactor = planet.scaleFactor ? planet.scaleFactor : 1;
@@ -61,7 +66,6 @@ const ViewUtils = ( function () {
       addApiPeriData( planet.name, fn(), { x, y } );
     }
 
-    console.log( planet );
     const scaledApiCoords = calcScaledCoords( planet, x, y, getWidth(), getHeight() );
     bgCtx.beginPath();
     bgCtx.fillStyle = planet.color;
@@ -99,6 +103,14 @@ const ViewUtils = ( function () {
     }
   };
 
+  const drawDates = ( julianDate, gregorianDate ) => {
+    getDataCtx().clearRect( 0, 0, getWidth(), getHeight() );
+    getDataCtx().font = '20px ubuntu';
+    getDataCtx().fillStyle = 'white';
+    getDataCtx().fillText( `Julian Date: ${julianDate}`, 50, 50 );
+    getDataCtx().fillText( `Gregorian Date: ${gregorianDate.getFullYear()}/${gregorianDate.getMonth()}/${gregorianDate.getDate()}`, 50, 70 );
+  };
+
   return {
     setupCanvases,
     getWidth,
@@ -109,6 +121,7 @@ const ViewUtils = ( function () {
     drawPoint,
     drawOrbit,
     drawPlutoOrbit,
+    drawDates,
   };
 }() );
 
@@ -122,5 +135,6 @@ module.exports = {
   drawPoint: ViewUtils.drawPoint,
   drawOrbit: ViewUtils.drawOrbit,
   drawPlutoOrbit: ViewUtils.drawPlutoOrbit,
+  drawDates: ViewUtils.drawDates,
 };
 
