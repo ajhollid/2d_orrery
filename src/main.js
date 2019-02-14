@@ -20,7 +20,10 @@ const app = ( function () {
       orbitals.T = date;
       SolarSystem[planetKey] = planet;
       const { x, y } = planet.orbit.genOrbElems.helioCentricCoords;
-      if ( shouldDraw ) { ViewUtils.drawPlanet( planet, x, y ); }
+      if ( shouldDraw ) {
+        ViewUtils.drawPlanet( planet, x, y );
+        ViewUtils.drawDates( currentDate, Kepler.JulianUtils.getGregorianDate( currentDate ) );
+      }
     }
     return SolarSystem;
   };
@@ -43,7 +46,6 @@ const app = ( function () {
 
   const addApiPeriData = ( planetKey, key, val ) => {
     SolarSystem[planetKey][key] = val;
-    console.log( SolarSystem[planetKey] );
   };
 
   const drawOrbits = () => {
@@ -51,9 +53,15 @@ const app = ( function () {
     for ( let i = 0; i < planetKeys.length; i += 1 ) {
       const planetKey = planetKeys[i];
       const planet = SolarSystem[planetKey];
-      const periSystem = updateSolarSystem( false, Kepler.JulianUtils.getJulianDate( planet.periDate ) );
+      const periSystem = updateSolarSystem(
+        false,
+        Kepler.JulianUtils.getJulianDate( planet.periDate ),
+      );
       ViewUtils.drawPoint( 'P', periSystem[planetKey], addApiPeriData );
-      const apiSystem = updateSolarSystem( false, Kepler.JulianUtils.getJulianDate( planet.apiDate ) );
+      const apiSystem = updateSolarSystem(
+        false,
+        Kepler.JulianUtils.getJulianDate( planet.apiDate ),
+      );
       ViewUtils.drawPoint( 'A', apiSystem[planetKey], addApiPeriData );
       ViewUtils.drawOrbit( planet );
     }

@@ -13,13 +13,7 @@ module.exports = merge( common, {
   mode: 'production',
   devtool: 'source-map',
   optimization: {
-    minimizer: [
-      new UglifyJsPlugin( {
-        cache: true,
-        parallel: true,
-        sourceMap: true,
-      } ),
-    ],
+
   },
   plugins: [
     new BundleAnalyzerPlugin(),
