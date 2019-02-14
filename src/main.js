@@ -57,6 +57,7 @@ const app = ( function () {
       ViewUtils.drawPoint( 'A', apiSystem[planetKey], addApiPeriData );
       ViewUtils.drawOrbit( planet );
     }
+    ViewUtils.drawPlutoOrbit( SolarSystem.pluto, Kepler.OrbitalUtils.getPlutoFullOrbit() );
   };
 
 
