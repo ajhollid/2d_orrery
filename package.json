@@ -1,0 +1,28 @@
+{
+  "name": "2d_orrery",
+  "version": "1.0.0",
+  "description": "",
+  "private": true,
+  "scripts": {
+    "build": "webpack --config webpack.prod.js && rsync -auv dist/ ../public/",
+    "deploy": "git subtree push --prefix dist origin gh-pages",
+    "lint": "eslint --ext .jsx,.js src --fix",
+    "start": "webpack-dev-server --open --config webpack.dev.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "clean-webpack-plugin": "^1.0.1",
+    "copy-webpack-plugin": "^4.6.0",
+    "css-loader": "^2.1.0",
+    "html-webpack-plugin": "^3.2.0",
+    "sass-loader": "^7.1.0",
+    "uglifyjs-webpack-plugin": "^2.1.1",
+    "webpack": "^4.29.3",
+    "webpack-bundle-analyzer": "^3.0.4",
+    "webpack-cli": "^3.2.3",
+    "webpack-dev-server": "^3.1.14",
+    "webpack-merge": "^4.2.1"
+  }
+}
