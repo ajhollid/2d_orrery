@@ -11,9 +11,20 @@
   <link href="https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,400i,700,700i" rel="stylesheet">
 </head>
 <body>  
+
   <canvas id="bg_canvas"></canvas>
-  <canvas id="data_canvas"></canvas>
   <canvas id="canvas"></canvas>
+  <div class="controls">
+      <span class="control-text" id ="julian-date-text">Juliane Date:</span>
+      <span class="control-text" id="gregorian-date-text">Gregorian Date: </span>
+      <span class="control-text" id="speed-text">1 ms = 1 day</span>
+      <div class ="divider"></div>
+      <button id="start-button">Start</button>
+      <button id="faster-button">&uarr;</button>
+      <button id="slower-button">&darr;</button>
+
+
+  </div>
   <script src="bundle.js"></script>
 </body>
 </html>
