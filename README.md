@@ -1,7 +1,7 @@
 # 2D Orrery
 This project provides a 2D representation of the position of the planets of our solar system.  This project makes use of the [Kepler-Utils](https://www.npmjs.com/package/kepler-utils) node module to calculate the heliocentric positions of the planets at any given date.  These positions are then scaled and plotted on an [HTML Canvas](https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial)
 
-![JS Orrery](https://github.com/popnfresh234/fractal_tree_react/blob/master/docs/screenshot.png)
+![JS Orrery](https://github.com/popnfresh234/2d_orrery/blob/master/docs/screenshot.png)
 
 
 ## Getting Started
