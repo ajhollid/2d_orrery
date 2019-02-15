@@ -1,24 +1,41 @@
 const ViewUtils = ( function () {
   const R_SOL = 10;
+  const STAR_COLORS = ['#ffffff', '#ffe9c4', '#d4fbff'];
+  const STAR_NUMBER = window.innerWidth;
   const SCALE_DESKTOP = 70;
   let started = false;
   let ms = 1;
 
-  // Canvas data
   const canvases = document.getElementsByTagName( 'canvas' );
   const planetCanvas = document.getElementById( 'canvas' );
   const bgCanvas = document.getElementById( 'bg_canvas' );
   const ctx = planetCanvas.getContext( '2d' );
   const bgCtx = bgCanvas.getContext( '2d' );
 
-  // Controls
 
-
+  const getRandom = ( min, max ) => Math.round( ( ( Math.random() * max ) - min ) + min );
   const toRadians = deg => deg * Math.PI / 180;
   const getWidth = () => planetCanvas.width;
   const getHeight = () => planetCanvas.height;
   const getCtx = () => ctx;
   const getBgCtx = () => bgCtx;
+  const getBgCanvas = () => bgCanvas;
+
+  const drawStars = () => {
+    for ( let i = 0; i < STAR_NUMBER; i += 1 ) {
+      const x = Math.random() * getBgCanvas().width;
+      const y = Math.random() * getBgCanvas().height;
+      const r = Math.random() * 1.1;
+      const a = getRandom( 50, 100 ) / 100;
+      getBgCtx().beginPath();
+      getBgCtx().globalAlpha = a;
+      getBgCtx().fillStyle = STAR_COLORS[getRandom( 0, STAR_COLORS.length )];
+      getBgCtx().arc( x, y, r, 0, 2 * Math.PI );
+      getBgCtx().fill();
+      getBgCtx().closePath();
+    }
+    getBgCtx().globalAlpha = 1;
+  };
 
   const initialize = ( incrementSystemCallback ) => {
     const width = window.innerWidth;
@@ -64,6 +81,8 @@ const ViewUtils = ( function () {
     getBgCtx().arc( width / 2, height / 2, R_SOL, 0, 2 * Math.PI );
     getBgCtx().fillStyle = 'yellow';
     getBgCtx().fill();
+    // Draw stars
+    drawStars();
   };
 
 
