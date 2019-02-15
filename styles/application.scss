@@ -1,2 +1,28 @@
+
+
 @import 'normalize.css';
-@import 'style.css'
+@import 'style.css';
+
+.control-text{
+    display: block;
+    color: white;
+    z-index: 1;
+}
+
+canvas {
+    z-index: -1;
+}
+
+
+.controls{
+    position: absolute; 
+    width: 15rem;
+    top: 5rem;
+    left: 5rem;
+}
+
+.divider {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    border-top: 1px solid white;
+}

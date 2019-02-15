@@ -33,10 +33,10 @@ module.exports = {
     ],
   },
   plugins: [
-    new HtmlWebpackPlugin( {
-      filename: 'index.html',
-      template: 'index.html',
-    } ),
+    // new HtmlWebpackPlugin( {
+    //   filename: 'index.html',
+    //   template: './index.html',
+    // } ),
     new CopyWebpackPlugin( [
       { from: './docs/favicon.ico', to: './favicon.ico' },
       { from: 'index.html' },

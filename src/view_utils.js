@@ -1,22 +1,58 @@
 const ViewUtils = ( function () {
   const R_SOL = 10;
   const SCALE_DESKTOP = 70;
+  let started = false;
+  let ms = 1;
+
+  // Canvas data
   const canvases = document.getElementsByTagName( 'canvas' );
   const planetCanvas = document.getElementById( 'canvas' );
-  const dataCanvas = document.getElementById( 'data_canvas' );
   const bgCanvas = document.getElementById( 'bg_canvas' );
   const ctx = planetCanvas.getContext( '2d' );
   const bgCtx = bgCanvas.getContext( '2d' );
-  const dataCtx = dataCanvas.getContext( '2d' );
+
+  // Controls
+
 
   const toRadians = deg => deg * Math.PI / 180;
   const getWidth = () => planetCanvas.width;
   const getHeight = () => planetCanvas.height;
   const getCtx = () => ctx;
   const getBgCtx = () => bgCtx;
-  const getDataCtx = () => dataCtx;
 
-  const setupCanvases = ( width, height ) => {
+  const initialize = ( incrementSystemCallback ) => {
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+    const buttons = document.getElementsByTagName( 'button' );
+
+    const handleClick = ( event ) => {
+      const start = ( e ) => {
+        started = !started;
+        e.target.innerHTML = started ? 'Stop' : 'Start';
+        incrementSystemCallback();
+      };
+
+      const setSpeed = ( e ) => {
+        if ( e.target.id === 'faster-button' ) { ms - 10 < 1 ? ms = 1 : ms -= 10; } else { ms += 10; }
+        if ( ms > 10 ) { ms = Math.floor( ms / 10 ) * 10; }
+        const time = ms / 1000 < 1 ? `${ms} ms` : `${ms / 1000} s`;
+        document.getElementById( 'speed-text' ).innerHTML = `${time} = 1 day`;
+      };
+
+      const lookup = {
+        'start-button': () => start( event ),
+        'faster-button': () => setSpeed( event ),
+        'slower-button': () => setSpeed( event ),
+      };
+      const fn = lookup[event.target.id];
+      if ( fn ) fn();
+    };
+
+    for ( let i = 0; i < buttons.length; i += 1 ) {
+      const button = buttons[i];
+      button.addEventListener( 'click', handleClick );
+    }
+
     for ( let i = 0; i < canvases.length; i += 1 ) {
       const canvas = canvases[i];
       canvas.width = width;
@@ -103,16 +139,18 @@ const ViewUtils = ( function () {
     }
   };
 
-  const drawDates = ( julianDate, gregorianDate ) => {
-    getDataCtx().clearRect( 0, 0, getWidth(), getHeight() );
-    getDataCtx().font = '20px ubuntu';
-    getDataCtx().fillStyle = 'white';
-    getDataCtx().fillText( `Julian Date: ${julianDate}`, 50, 50 );
-    getDataCtx().fillText( `Gregorian Date: ${gregorianDate.getFullYear()}/${gregorianDate.getMonth()}/${gregorianDate.getDate()}`, 50, 70 );
+  const setDates = ( julianDate, gregorianDate ) => {
+    const julianDateText = document.getElementById( 'julian-date-text' );
+    const gregorianDateText = document.getElementById( 'gregorian-date-text' );
+    julianDateText.innerHTML = `Julian date: ${julianDate}`;
+    gregorianDateText.innerHTML = `Gregorian date: ${gregorianDate.getFullYear()}/${gregorianDate.getMonth()}/${gregorianDate.getDate()}`;
   };
 
+  const isStarted = () => started;
+  const getMS = () => ms;
+
   return {
-    setupCanvases,
+    initialize,
     getWidth,
     getHeight,
     getCtx,
@@ -121,12 +159,14 @@ const ViewUtils = ( function () {
     drawPoint,
     drawOrbit,
     drawPlutoOrbit,
-    drawDates,
+    setDates,
+    isStarted,
+    getMS,
   };
 }() );
 
 module.exports = {
-  setupCanvases: ViewUtils.setupCanvases,
+  initialize: ViewUtils.initialize,
   getWidth: ViewUtils.getWidth,
   getHeight: ViewUtils.getHeight,
   getCtx: ViewUtils.getCtx,
@@ -135,6 +175,8 @@ module.exports = {
   drawPoint: ViewUtils.drawPoint,
   drawOrbit: ViewUtils.drawOrbit,
   drawPlutoOrbit: ViewUtils.drawPlutoOrbit,
-  drawDates: ViewUtils.drawDates,
+  setDates: ViewUtils.setDates,
+  isStarted: ViewUtils.isStarted,
+  getMS: ViewUtils.getMS,
 };
 
