@@ -1,6 +1,6 @@
 require( '../styles/application.scss' );
 const Kepler = require( 'kepler-utils' );
-const ViewUtils = require( './view_utils' );
+const ViewUtils = require( './viewUtils' );
 
 const { SolarSystem } = Kepler;
 const app = ( function () {
